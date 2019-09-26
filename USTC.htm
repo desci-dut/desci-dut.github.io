@@ -1,0 +1,253 @@
+﻿<!DOCTYPE HTML>
+<!-- saved from url=(0023)http://6tv.ustc.edu.cn/ -->
+<!DOCTYPE html PUBLIC "" ""><HTML><HEAD><META content="IE=11.0000" 
+http-equiv="X-UA-Compatible">
+         
+<META http-equiv="Content-Type" content="text/html; charset=utf-8">       
+<TITLE>频道列表-IPTV</TITLE>       
+<SCRIPT src="js/jquery-1.10.2.js"></SCRIPT>
+       
+<SCRIPT src="js/skel.min.js"></SCRIPT>
+       
+<SCRIPT>
+        skel.init();
+      </SCRIPT>
+     
+<STYLE>
+    body{
+        font-family: "ff-tisa-web-pro-1","ff-tisa-web-pro-2","Lucida Grande","Helvetica Neue",Helvetica,Arial,"Hiragino Sans GB","Hiragino Sans GB W3","WenQuanYi Micro Hei",sans-serif;
+        width: 100%;
+        height: 100%;
+        margin: auto;
+        background-repeat: repeat-x;
+        background-image: -webkit-linear-gradient(45deg, #ADCAC8, #082274);
+        background-image: -moz-linear-gradient(45deg, #ADCAC8, #082274);
+        background-image: linear-gradient(45deg, #ADCAC8, #082274);
+        background-attachment: fixed;
+    }
+    .container{
+        margin-top:10px;
+    }
+    .well {
+        min-height: 20px;
+        padding: 19px;
+        padding-bottom:40px;
+        margin-bottom: 20px;
+        background-color: #f5f5f5;
+        border: 1px solid #e3e3e3;
+        -webkit-border-radius: 4px;
+        -moz-border-radius: 4px;
+        border-radius: 4px;
+        -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.05);
+        -moz-box-shadow: inset 0 1px 1px rgba(0,0,0,0.05);
+        box-shadow: inset 0 1px 1px rgba(0,0,0,0.05);
+    }
+    a{
+        text-decoration:none;
+        color:blue;
+    }
+    </STYLE>
+
+<META name="GENERATOR" content="MSHTML 11.00.10586.420"></HEAD>         
+<BODY>
+<DIV class="container well" id="list">
+<DIV class="row">
+<DIV class="8u -2u">
+<H1 style="text-align: center;"><A 
+href="http://6tv.ustc.edu.cn/index.html">在线直播</A>  <A href="http://6tv.ustc.edu.cn/tvwall.html">电视幕墙</A> 
+                  </H1></DIV></DIV></DIV>
+<SCRIPT>
+
+
+var isMobile = {  
+    Android: function() {  
+        return navigator.userAgent.match(/Android/i) ? true : false;  
+    },  
+    BlackBerry: function() {  
+        return navigator.userAgent.match(/BlackBerry/i) ? true : false;  
+    },  
+    iOS: function() {  
+        return navigator.userAgent.match(/iPhone|iPad|iPod/i) ? true : false;  
+    },  
+    MACOS: function() {  
+        return ( navigator.vendor && navigator.vendor.indexOf('Apple') > -1) ? true : false;  
+    },  
+    Windows: function() {  
+        return navigator.userAgent.match(/IEMobile/i) ? true : false;  
+    },  
+    any: function() {  
+        return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.MACOS() || isMobile.Windows());  
+    }  
+};
+
+
+(function() {
+  var listURL = "/wall/list.json";
+  $.getJSON( listURL )
+    .done(function( data ) {
+
+      var output='';
+      var userismobile = isMobile.any();
+
+// 高清 
+	output+='<div class="row" style="margin-top:10px"> <p class="8u -2u"> 高清节目 </div>';
+      var count=0
+      for (var i in data) {
+	if ( data[i].status == 1 ) continue;
+ 	if ( ! data[i].name.match("高清") ) continue;
+        if ( ( count % 4 ) == 0 ) {
+          if ( count != 0 ) output+='</div>';
+          output+='<div class="row" style="margin-top:10px">';
+          output+='<div class="2u -2u">';
+        } else {
+          output+='<div class="2u">';
+	}
+        output+='<p>';
+	if ( userismobile ) 
+        	output+='<a class="icon1" href="/hls/'+data[i].id+'.m3u8" target="_blank">';
+	else 
+        	output+='<a class="icon1" href="player.html?p='+data[i].id+'" target="_blank">';
+ 	output+=data[i].name;
+ 	output+= '</a></p>';
+        output+='</div>';
+	count++;
+      }
+      output+='</div>';
+
+// CCTV 
+	output+='<div class="row" style="margin-top:20px"> <p class="8u -2u"> CCTV节目 </div>';
+      var count=0
+      for (var i in data) {
+	if ( data[i].status == 1 ) continue;
+ 	if (  data[i].name.match("高清") ) continue;
+ 	if ( ! data[i].name.match("CCTV") ) continue;
+        if ( ( count % 4 ) == 0 ) {
+          if ( count != 0 ) output+='</div>';
+          output+='<div class="row" style="margin-top:10px">';
+          output+='<div class="2u -2u">';
+        } else {
+          output+='<div class="2u">';
+	}
+        output+='<p>';
+	if ( userismobile ) 
+        	output+='<a class="icon1" href="/hls/'+data[i].id+'.m3u8" target="_blank">';
+	else 
+        	output+='<a class="icon1" href="player.html?p='+data[i].id+'" target="_blank">';
+ 	output+=data[i].name;
+ 	output+= '</a></p>';
+        output+='</div>';
+	count++;
+      }
+      output+='</div>';
+
+// 北京
+	output+='<div class="row" style="margin-top:20px"> <p class="8u -2u"> 北京台节目 </div>';
+      var count=0
+      for (var i in data) {
+	if ( data[i].status == 1 ) continue;
+ 	if (  data[i].name.match("高清") ) continue;
+ 	if (  data[i].name.match("CCTV") ) continue;
+ 	if ( ! data[i].name.match("北京") ) continue;
+        if ( ( count % 4 ) == 0 ) {
+          if ( count != 0 ) output+='</div>';
+          output+='<div class="row" style="margin-top:10px">';
+          output+='<div class="2u -2u">';
+        } else {
+          output+='<div class="2u">';
+	}
+        output+='<p>';
+	if ( userismobile ) 
+        	output+='<a class="icon1" href="/hls/'+data[i].id+'.m3u8" target="_blank">';
+	else 
+        	output+='<a class="icon1" href="player.html?p='+data[i].id+'" target="_blank">';
+ 	output+=data[i].name;
+ 	output+= '</a></p>';
+        output+='</div>';
+	count++;
+      }
+      output+='</div>';
+
+// 地方卫视
+	output+='<div class="row" style="margin-top:20px"> <p class="8u -2u"> 地方卫视节目 </div>';
+      var count=0
+      for (var i in data) {
+	if ( data[i].status == 1 ) continue;
+ 	if (  data[i].name.match("高清") ) continue;
+ 	if (  data[i].name.match("CCTV") ) continue;
+ 	if (  data[i].name.match("北京") ) continue;
+ 	if ( ! data[i].name.match("卫视") ) continue;
+        if ( ( count % 4 ) == 0 ) {
+          if ( count != 0 ) output+='</div>';
+          output+='<div class="row" style="margin-top:10px">';
+          output+='<div class="2u -2u">';
+        } else {
+          output+='<div class="2u">';
+	}
+        output+='<p>';
+	if ( userismobile ) 
+        	output+='<a class="icon1" href="/hls/'+data[i].id+'.m3u8" target="_blank">';
+	else 
+        	output+='<a class="icon1" href="player.html?p='+data[i].id+'" target="_blank">';
+ 	output+=data[i].name;
+ 	output+= '</a></p>';
+        output+='</div>';
+	count++;
+      }
+      output+='</div>';
+
+// 其他
+      output+='<div class="row" style="margin-top:20px"> <p class="8u -2u"> 其他节目 </div>';
+      var count=0
+      for (var i in data) {
+	if ( data[i].status == 1 ) continue;
+ 	if (  data[i].name.match("高清") ) continue;
+ 	if (  data[i].name.match("CCTV") ) continue;
+ 	if (  data[i].name.match("北京") ) continue;
+ 	if (  data[i].name.match("卫视") ) continue;
+        if ( ( count % 4 ) == 0 ) {
+          if ( count != 0 ) output+='</div>';
+          output+='<div class="row" style="margin-top:10px">';
+          output+='<div class="2u -2u">';
+        } else {
+          output+='<div class="2u">';
+	}
+        output+='<p>';
+	if ( userismobile ) 
+        	output+='<a class="icon1" href="/hls/'+data[i].id+'.m3u8" target="_blank">';
+	else 
+        	output+='<a class="icon1" href="player.html?p='+data[i].id+'" target="_blank">';
+ 	output+=data[i].name;
+ 	output+= '</a></p>';
+        output+='</div>';
+	count++;
+      }
+      output+='</div>';
+
+      output+='<div class="row" style="margin-top:20px"> <p class="8u -2u"> 校园直播 </div>';
+          output+='<div class="row" style="margin-top:10px">';
+          output+='<div class="2u -2u">';
+        output+='<p>';
+	if ( userismobile ) 
+        	output+='<a class="icon1" href="/hls/ustc-tv61.m3u8" target="_blank">';
+	else 
+        	output+='<a class="icon1" href="player.html?p=ustc-tv61" target="_blank">';
+ 	output+= '校内直播</a></p>';
+        output+='</div>';
+      output+='</div>';
+
+      output+=' \
+          <div class="row" style="margin-top:20px"> \
+              <p class="8u -2u"> \
+                1. PC端播放需要您的浏览器支持Flash控件；<br /> \
+                2. 移动端播放需要您的播放设备支持Http Live Streaming技术。目前iOS平台、新版本OS X平台、原生Android ROM平台自带浏览器（Safari、Chrome移动版）均可直接播放。部分安卓第三方ROM无法支持，请自行安装VLC等播放器播放。<br /> \
+              </p> \
+              <p class="8u -2u"> \
+                测试反馈： BBS USTCnet\
+              </p> \
+          </div>';
+
+      document.getElementById("list").innerHTML+=output;
+    });
+})();
+</SCRIPT>
+     </BODY></HTML>
