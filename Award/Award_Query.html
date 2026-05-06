@@ -6,58 +6,85 @@
 
 <style>
 body {
-  font-family: Arial;
-  margin: 20px;
-  background: #f5f6f7;
+  font-family: "Segoe UI", Arial;
+  margin: 0;
+  background: #f4f6f9;
 }
 
 .container {
-  max-width: 1200px;
-  margin: auto;
+  max-width: 1300px;
+  margin: 30px auto;
+  background: white;
+  padding: 20px 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
 h2 {
   text-align: center;
+  margin-bottom: 20px;
 }
 
-/* 查询 & 筛选区域 */
 .controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
   margin-bottom: 15px;
 }
 
-/* 输入框 */
 input, select {
-  padding: 8px;
-  margin: 5px;
+  padding: 8px 10px;
   border: 1px solid #ccc;
   border-radius: 6px;
+  min-width: 160px;
 }
 
-/* 表格 */
-table {
+input {
+  flex: 1;
+}
+
+.table-container {
+  max-height: 600px;
+  overflow: auto;
+  border-radius: 8px;
+  border: 1px solid #eee;
+}
+
+ table {
   width: 100%;
   border-collapse: collapse;
-  background: white;
+  font-size: 14px;
 }
 
 th, td {
-  border: 1px solid #ddd;
-  padding: 8px;
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  text-align: left;
 }
 
 th {
-  background: #f0f0f0;
+  background: #f7f9fc;
   position: sticky;
   top: 0;
+  z-index: 1;
 }
 
 tr:hover {
-  background: #fafafa;
+  background: #f1f5ff;
 }
+
+/* 列宽优化 */
+th:nth-child(1), td:nth-child(1) {width:60px; text-align:center;}
+th:nth-child(2), td:nth-child(2) {width:35%;}
+th:nth-child(3), td:nth-child(3) {width:100px; text-align:center;}
+th:nth-child(4), td:nth-child(4) {width:20%;}
+th:nth-child(5), td:nth-child(5) {width:120px; text-align:center;}
+th:nth-child(6), td:nth-child(6) {width:90px; text-align:center;}
 
 .count {
   margin-top: 10px;
   color: #666;
+  text-align: right;
 }
 </style>
 </head>
@@ -68,19 +95,19 @@ tr:hover {
 <h2>成果查询系统</h2>
 
 <div class="controls">
-  <!-- 🔍 查询 -->
-  <input type="text" id="keyword" placeholder="输入成果名称或申报者进行查询">
+  <input type="text" id="keyword" placeholder="🔍 输入成果名称或申报者查询">
 
-  <!-- 🎯 筛选 -->
   <select id="subject"><option value="">全部学科</option></select>
   <select id="grade"><option value="">全部等级</option></select>
   <select id="type"><option value="">全部类型</option></select>
 </div>
 
+<div class="table-container">
 <table>
   <thead id="thead"></thead>
   <tbody id="tbody"></tbody>
 </table>
+</div>
 
 <p class="count" id="count"></p>
 
@@ -89,16 +116,14 @@ tr:hover {
 <script>
 let data = [];
 
-// 加载数据
 fetch('data.json')
 .then(res => res.json())
 .then(d => {
   data = d;
   initFilters();
-  render(data); // 默认显示全部
+  render(data);
 });
 
-// 初始化下拉筛选（自动从JSON提取）
 function initFilters(){
   const subjects = [...new Set(data.map(r => r['受理范围']).filter(v => v))];
   const grades = [...new Set(data.map(r => r['等级']).filter(v => v))];
@@ -119,7 +144,6 @@ function fillSelect(id, list){
   });
 }
 
-// 渲染表格
 function render(arr){
   if(arr.length === 0){
     document.getElementById('tbody').innerHTML = '';
@@ -127,7 +151,6 @@ function render(arr){
     return;
   }
 
-  // 去掉空列
   const keys = Object.keys(arr[0]).filter(k => k && k.trim() !== '');
 
   document.getElementById('thead').innerHTML =
@@ -139,7 +162,6 @@ function render(arr){
   document.getElementById('count').innerText = '共 ' + arr.length + ' 条';
 }
 
-// 查询 + 筛选
 function filter(){
   let keyword = document.getElementById('keyword').value.toLowerCase();
   let subject = document.getElementById('subject').value;
@@ -147,17 +169,10 @@ function filter(){
   let type = document.getElementById('type').value;
 
   let result = data.filter(r => {
-
-    // 🔍 查询（名称 + 作者）
-    let text = (
-      (r['申报成果名称'] || '') + ' ' +
-      (r['申报者'] || '')
-    ).toLowerCase();
+    let text = ((r['申报成果名称'] || '') + ' ' + (r['申报者'] || '')).toLowerCase();
 
     return (
       (!keyword || text.includes(keyword)) &&
-
-      // 🎯 筛选
       (!subject || r['受理范围'] === subject) &&
       (!grade || r['等级'] === grade) &&
       (!type || r['成果类型'] === type)
@@ -167,7 +182,6 @@ function filter(){
   render(result);
 }
 
-// 监听
 ['keyword','subject','grade','type'].forEach(id=>{
   document.getElementById(id).addEventListener('input', filter);
   document.getElementById(id).addEventListener('change', filter);
