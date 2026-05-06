@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<title>成果查询系统</title>
+
+<style>
+body {
+  font-family: Arial;
+  margin: 20px;
+  background: #f5f6f7;
+}
+
+.container {
+  max-width: 1200px;
+  margin: auto;
+}
+
+h2 {
+  text-align: center;
+}
+
+/* 查询 & 筛选区域 */
+.controls {
+  margin-bottom: 15px;
+}
+
+/* 输入框 */
+input, select {
+  padding: 8px;
+  margin: 5px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+/* 表格 */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+th {
+  background: #f0f0f0;
+  position: sticky;
+  top: 0;
+}
+
+tr:hover {
+  background: #fafafa;
+}
+
+.count {
+  margin-top: 10px;
+  color: #666;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<h2>成果查询系统</h2>
+
+<div class="controls">
+  <!-- 🔍 查询 -->
+  <input type="text" id="keyword" placeholder="输入成果名称或申报者进行查询">
+
+  <!-- 🎯 筛选 -->
+  <select id="subject"><option value="">全部学科</option></select>
+  <select id="grade"><option value="">全部等级</option></select>
+  <select id="type"><option value="">全部类型</option></select>
+</div>
+
+<table>
+  <thead id="thead"></thead>
+  <tbody id="tbody"></tbody>
+</table>
+
+<p class="count" id="count"></p>
+
+</div>
+
+<script>
+let data = [];
+
+// 加载数据
+fetch('data.json')
+.then(res => res.json())
+.then(d => {
+  data = d;
+  initFilters();
+  render(data); // 默认显示全部
+});
+
+// 初始化下拉筛选（自动从JSON提取）
+function initFilters(){
+  const subjects = [...new Set(data.map(r => r['受理范围']).filter(v => v))];
+  const grades = [...new Set(data.map(r => r['等级']).filter(v => v))];
+  const types = [...new Set(data.map(r => r['成果类型']).filter(v => v))];
+
+  fillSelect('subject', subjects);
+  fillSelect('grade', grades);
+  fillSelect('type', types);
+}
+
+function fillSelect(id, list){
+  const sel = document.getElementById(id);
+  list.sort().forEach(v => {
+    let opt = document.createElement('option');
+    opt.value = v;
+    opt.text = v;
+    sel.appendChild(opt);
+  });
+}
+
+// 渲染表格
+function render(arr){
+  if(arr.length === 0){
+    document.getElementById('tbody').innerHTML = '';
+    document.getElementById('count').innerText = '共 0 条';
+    return;
+  }
+
+  // 去掉空列
+  const keys = Object.keys(arr[0]).filter(k => k && k.trim() !== '');
+
+  document.getElementById('thead').innerHTML =
+    '<tr>' + keys.map(k => '<th>'+k+'</th>').join('') + '</tr>';
+
+  document.getElementById('tbody').innerHTML =
+    arr.map(r => '<tr>' + keys.map(k => '<td>'+(r[k]||'')+'</td>').join('') + '</tr>').join('');
+
+  document.getElementById('count').innerText = '共 ' + arr.length + ' 条';
+}
+
+// 查询 + 筛选
+function filter(){
+  let keyword = document.getElementById('keyword').value.toLowerCase();
+  let subject = document.getElementById('subject').value;
+  let grade = document.getElementById('grade').value;
+  let type = document.getElementById('type').value;
+
+  let result = data.filter(r => {
+
+    // 🔍 查询（名称 + 作者）
+    let text = (
+      (r['申报成果名称'] || '') + ' ' +
+      (r['申报者'] || '')
+    ).toLowerCase();
+
+    return (
+      (!keyword || text.includes(keyword)) &&
+
+      // 🎯 筛选
+      (!subject || r['受理范围'] === subject) &&
+      (!grade || r['等级'] === grade) &&
+      (!type || r['成果类型'] === type)
+    );
+  });
+
+  render(result);
+}
+
+// 监听
+['keyword','subject','grade','type'].forEach(id=>{
+  document.getElementById(id).addEventListener('input', filter);
+  document.getElementById(id).addEventListener('change', filter);
+});
+</script>
+
+</body>
+</html>
