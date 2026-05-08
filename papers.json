@@ -1,6 +1,6 @@
 {
     "metadata": {
-        "last_update": "2026-05-08 09:04:30"
+        "last_update": "2026-05-08 09:08:57"
     },
     "publications": {
         "Monograph": [
@@ -27,27 +27,6 @@
             }
         ],
         "Journal Articles": [
-            {
-                "authors_en": "Qian Liang, Wenyu Yu*, Zhen Zhang, Francisco Chiclana",
-                "authors_cn": "Qian Liang, Wenyu Yu*, Zhen Zhang, Francisco Chiclana",
-                "title_en": "Targeting the right person: An optimization-driven framework for persuader selection in social networks with opinion evolution",
-                "title_cn": "Targeting the right person: An optimization-driven framework for persuader selection in social networks with opinion evolution",
-                "source_en": "European Journal of Operational Research",
-                "source_cn": "European Journal of Operational Research",
-                "year": "2026",
-                "vol": "334",
-                "no": "1",
-                "page": "216-235",
-                "doi": "10.1016/j.ejor.2026.04.023",
-                "Address": "",
-                "ISBN": "",
-                "addr": "",
-                "date": "",
-                "note_en": "",
-                "note_cn": "",
-                "esi_high": false,
-                "metrics": "SCI, EI, FMS A, ABS 4, IF=6.0"
-            },
             {
                 "authors_en": "Zhen Zhang, Ziyu Xu, Wenyu Yu*",
                 "authors_cn": "Zhen Zhang, Ziyu Xu, Wenyu Yu*",
@@ -89,6 +68,27 @@
                 "note_cn": "",
                 "esi_high": false,
                 "metrics": "CSSCI, FMS T1"
+            },
+            {
+                "authors_en": "Qian Liang, Wenyu Yu*, Zhen Zhang, Francisco Chiclana",
+                "authors_cn": "Qian Liang, Wenyu Yu*, Zhen Zhang, Francisco Chiclana",
+                "title_en": "Targeting the right person: An optimization-driven framework for persuader selection in social networks with opinion evolution",
+                "title_cn": "Targeting the right person: An optimization-driven framework for persuader selection in social networks with opinion evolution",
+                "source_en": "European Journal of Operational Research",
+                "source_cn": "European Journal of Operational Research",
+                "year": "2026",
+                "vol": "334",
+                "no": "1",
+                "page": "216-235",
+                "doi": "10.1016/j.ejor.2026.04.023",
+                "Address": "",
+                "ISBN": "",
+                "addr": "",
+                "date": "",
+                "note_en": "",
+                "note_cn": "",
+                "esi_high": false,
+                "metrics": "SCI, EI, FMS A, ABS 4, IF=6.0"
             },
             {
                 "authors_en": "Yaya Liu, Jiaming Li, Zhen Zhang*, Jian Wu, Rosa M Rodríguez, Luis Martínez",
